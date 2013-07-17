@@ -24,9 +24,6 @@ angular.module('ui.includefragment',[])
           element.html('');
         };
 
-        scope.$watch(fragExp, ngIncludeWatchAction);
-        scope.$watch(srcExp, ngIncludeWatchAction);
-
         function ngIncludeWatchAction() {
           var thisChangeId = ++changeCounter;
           var src = scope.$eval(srcExp);
@@ -34,9 +31,9 @@ angular.module('ui.includefragment',[])
 
           if (src) {
             $http.get(src, {cache: $templateCache}).success(function(response) {
-              if (thisChangeId !== changeCounter) return;
+              if (thisChangeId !== changeCounter) { return; }
 
-              if (childScope) childScope.$destroy();
+              if (childScope) { childScope.$destroy(); }
               childScope = scope.$new();
 
               var contents;
@@ -56,10 +53,13 @@ angular.module('ui.includefragment',[])
               childScope.$emit('$includeContentLoaded');
               scope.$eval(onloadExp);
             }).error(function() {
-              if (thisChangeId === changeCounter) clearContent();
+              if (thisChangeId === changeCounter) { clearContent(); }
             });
-          } else clearContent();
+          } else { clearContent(); }
         }
+
+        scope.$watch(fragExp, ngIncludeWatchAction);
+        scope.$watch(srcExp, ngIncludeWatchAction);
       };
     }
   };
